@@ -12,18 +12,12 @@ def perform_traceroute(arg):
     output = check_output("traceroute %s" % arg, shell=True)
     hops = output.split("\n")
     ips = get_ips(hops[1:])
-    print ips
-    geo = []
-    for hop in hops[1:]:
-        geo.append(hop)
-    #print geo
-    #print "\n".join(hops[1:])
 #libaa libcaca geoip
 
 
-def get_ips(hops):
-    ips = [(hop.split())[2] for hop in hops if hop != '' and hop != '*']
-    print ips
+def get_ips(lines):
+    hops = [line.split()[2] for line in lines if line != '']
+    ips = [hop for hop in hops if hop != '*']
     return ips
 
 
