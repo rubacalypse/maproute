@@ -1,2 +1,2 @@
-This shall be the greatest tool for visualizing trace routes on a map, I tell
+This shall be the greatest tool for visualizing traceroutes on a map, I tell
 you.
