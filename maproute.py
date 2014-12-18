@@ -7,7 +7,6 @@ from sys import argv
 
 def main():
     dest = argv[1]
-    print dest
     hops = perform_traceroute(dest)
     ips = get_ips(hops[1:])
     locs = [ip_to_location(ip) for ip in ips]
@@ -32,15 +31,18 @@ def perform_traceroute(dest):
 
 
 def get_ips(lines):
+    #get the IP from the traceroute hops
     ips = [line[line.find("(") + 1 : line.find(")")] for line in lines if "*"
         not in line and line != '']
     return ips
 
 
 def ip_to_location(ip):
+    #retrieve IP location information from local GeoLiteCity database
     gi = pygeoip.GeoIP("/Users/ruba/code/maproute/GeoLiteCity.dat")
     output = gi.record_by_addr(ip)
     geo = dict()
+    #build the dictionary, make sure it doesn't include Nulls or empty strings
     if output is not None:
       if "city" in output and output['city'] != None and output['city'] != '':
             geo['city'] = output['city']
