@@ -1,5 +1,6 @@
 import pygeoip
 import geopy
+from collections import namedtuple
 from geopy.geocoders import Nominatim
 from subprocess import check_output
 from sys import argv
@@ -9,19 +10,11 @@ def main():
     dest = argv[1]
     hops = perform_traceroute(dest)
     ips = get_ips(hops[1:])
-    locs = [ip_to_location(ip) for ip in ips]
-    coords = [get_lat_lon(loc) for loc in locs if loc != '']
+    locs = {ip: ip_to_location(ip) for ip in ips}
+    coords = {ip: get_lat_lon(loc) for ip, loc in locs.items() if loc != ''}
+    print ("locations: %s\t" % locs)
+    print("coords: %s\t" % coords)
 
-def get_lat_lon(geo):
-    geolocator = Nominatim()
-    location = geolocator.geocode(geo, timeout=1000)
-    if location is None:
-      return
-    coords = dict()
-    coords['ip'] = geo['ip']
-    coords['lat'] = location.latitude
-    coords['lon'] = location.longitude
-    return coords 
 
 def perform_traceroute(dest):
     output = check_output("traceroute -m %d %s" % (20, dest), shell=True)
@@ -52,8 +45,19 @@ def ip_to_location(ip):
       if "country_name" in output and output['country_name'] != None and \
         output['country_name'] != '':
             geo['country'] = output['country_name']
-      geo['ip'] = ip
     return geo
+
+
+def get_lat_lon(geo):
+    geolocator = Nominatim()
+    location = geolocator.geocode(geo, timeout=1000)
+    if location is None:
+      return
+    coords = namedtuple('coords', ['lat', 'long'])
+    c = coords(location.latitude, location.longitude)
+    return c
+
+
 
 
 if __name__ == '__main__':
