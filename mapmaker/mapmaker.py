@@ -7,8 +7,6 @@ import sys, os
 # of the map.
 # lat_ts is the latitude of true scale.
 # resolution = 'c' means use crude resolution coastlines.
-sys.path.append('/Users/ruba/maproute/')
-sys.path.append('/Users/ruba/maproute/geo/')
 sys.path.append(os.path.realpath('.'))
 
 def main():
@@ -16,16 +14,15 @@ def main():
 
 
 def plot_lat_long(coord):
-  
   lat = coord[1].lat
   long = coord[1].long
-
   m = Basemap(projection='merc', lat_0=lat, lon_0=long+1,\
               llcrnrlat=lat-2,urcrnrlat=lat+2,\
               llcrnrlon=long+2,urcrnrlon=long-2, resolution='h')
   
   m.drawcoastlines()
   m.fillcontinents(color='coral',lake_color='aqua')
+
 # draw parallels and meridians.
   m.drawparallels(np.arange(-90.,91.,30.))
   m.drawmeridians(np.arange(-180.,181.,60.))
