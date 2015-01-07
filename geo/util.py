@@ -43,8 +43,6 @@ def get_lat_long(geo):
     return c
 
 def airport_json_to_tuples():
-  #airport = namedtuple('airport', ['icao', 'iata', 'airport', 'city',
-   # 'country', 'lat', 'lon'])
   airport = namedtuple('airport', ['city', 'state', 'country'])
   with open('airport_data.json') as airport_data:
     airport_json = json.load(airport_data)
