@@ -29,11 +29,15 @@ def get_lat_long(geo):
     print geo
     geo_dict = dict()
     geo_dict['city'] = geo.city
-    if geo.city == 'newyork':
-      geo_dict['city'] = 'new york'
-    if geo.state != None:
+    if geo.city is 'new york':
+      geo_dict['city'] = 'New York City'
+    if geo.city is 'london':
+      geo_dict['city'] = 'London'
+    if geo.state is not None:
       geo_dict['state'] = geo.state
     geo_dict['country'] = geo.country
+    if geo.country == 'england':
+      geo_dict['country'] = 'United Kingdom'
     geolocator = Nominatim()
     location = geolocator.geocode(geo_dict, timeout=1000)
     if location is None:
@@ -47,7 +51,6 @@ def airport_json_to_tuples():
   with open('airport_data.json') as airport_data:
     airport_json = json.load(airport_data)
     tuples = [airport(city=item[3], state=None, country=item[4]) for item in airport_json]
-    #print tuples
     return tuples
 
 def city_json_to_tuples():
