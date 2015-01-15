@@ -67,10 +67,10 @@ def us_city_json_to_tuples():
     tuples = [uscity(city=item[0], state=item[1], country='usa') for item in cities_json]
     return tuples
 
-def city_in_hop(hop, city_tuples):
+def city_in_hop(hop, city_tuples, plot_points):
   correct = [] 
   for tup in city_tuples:
     city = tup.city.replace(' ','')
     if city in hop and len(tup.city) > 3:
-      correct.append(tup)
+        correct.append(tup)
   return correct

@@ -6,8 +6,10 @@ from mapmaker.mapmaker import plot_lat_long
 from sys import argv, path
 from operator import itemgetter, attrgetter, methodcaller
 from collections import namedtuple
+from PIL import Image
 
 
+#TODO: logging module, idiot
 def main():
     dest = argv[1]
     hops = perform_traceroute(dest)
@@ -25,20 +27,25 @@ def main():
     plot_point = namedtuple('plot_point', ['ip', 'coords']) 
     for hop in parsed_hops:
       total = []
-      world = city_in_hop(hop.text, world_city_tuples)
-      us = city_in_hop(hop.text, us_city_tuples)
-      airport = city_in_hop(hop.text, airport_tuples)
+      '''check which cities show up in the hop text strings '''
+      world = city_in_hop(hop.text, world_city_tuples, plot_list)
+      us = city_in_hop(hop.text, us_city_tuples, plot_list)
+      airport = city_in_hop(hop.text, airport_tuples, plot_list)
       total = world + us + airport
       if len(total) == 0:
         continue
+      '''sort by length of city name
+         correct match will most likely be the longest city '''
       sorted_results = sorted(total, key=lambda city: len(city[0]))
       city_to_plot = plot_point(ip=hop.ip, coords=sorted_results[-1])
+      '''append correct city to plot point list'''
       plot_list.append(city_to_plot)
+
+
 
     '''plotting on map'''
     coords = [(hop.ip, get_lat_long(hop.coords)) for hop in plot_list]
-    for coord in coords:
-      plot_lat_long(coord)
+    plot_lat_long(coords)
     
 
 if __name__ == '__main__':
